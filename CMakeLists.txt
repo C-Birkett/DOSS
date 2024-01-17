@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(RayDawg
+project(DOSS
         VERSION 0.1.0
         LANGUAGES CXX)
 
@@ -24,11 +24,21 @@ if (NOT raylib_FOUND) # If there's none, fetch and build raylib
   endif()
 endif()
 
+add_library(doss_lib
+    consts.h
+    planets.h
+    planets.cpp
+)
+
+target_link_libraries(doss_lib raylib)
+
 # important names
 set(APPNAME ${PROJECT_NAME})
 add_executable(${APPNAME} ./main.cpp)
 
 # raylib
+target_link_libraries(${APPNAME} 
+                        raylib
+                        doss_lib)
 
-target_link_libraries(${APPNAME} raylib )
 #target_compile_features(${APPNAME} PRIVATE cxx_std_17)

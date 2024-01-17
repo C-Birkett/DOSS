@@ -2,4 +2,4 @@
 
 cmake -B build
 cmake --build build
-./build/RayDawg
+./build/DOSS
