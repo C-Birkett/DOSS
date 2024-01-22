@@ -10,11 +10,6 @@ Planets::Planets()
     InitSolarSystem();
 }
 
-Planets::~Planets()
-{
-
-}
-
 Vector3 Planets::GetPlanetAccel(size_t planet)
 {
     float accel = planetForces[planet] / planetMasses[planet];
@@ -23,12 +18,15 @@ Vector3 Planets::GetPlanetAccel(size_t planet)
 
 void Planets::InitSolarSystem()
 {
+    parents.reserve(numPlanets);
     positions.reserve(numPlanets);
     radii.reserve(numPlanets);
     physicsObjects.reserve(numPlanets);
 
     for(std::size_t i = 0; i < numPlanets; i++)
     {
+        parents.push_back(planetParents[i]);
+
         positions.push_back((Vector3){orbitRadii[i], 0.0f, 0.0f});
         
         radii.push_back(planetRadii[i]);
@@ -38,14 +36,21 @@ void Planets::InitSolarSystem()
 
         physicsObjects.push_back(obj);
     }
+
+    parents[1] = 3;
+}
+
+void Planets::InitRandomSystem(size_t numPlanets)
+{
+
 }
 
 void Planets::UpdatePhysicsObjects(float timePassed)
 {
     for(std::size_t i = 0; i < numPlanets; i++)
     {
-        physicsObjects[i].accelleration = GetPlanetAccel(i);
-        physicsObjects[i].velocity = Vector3Scale(physicsObjects[i].accelleration, timePassed);
+        physicsObjects[i].acceleration = GetPlanetAccel(i);
+        physicsObjects[i].velocity = Vector3Add(physicsObjects[i].velocity, Vector3Scale(physicsObjects[i].acceleration, timePassed));
     }
 }
 
@@ -53,7 +58,7 @@ void Planets::UpdatePositions(float timePassed)
 {
     for(std::size_t i = 0; i < numPlanets; i++)
     {
-        physicsObjects[i].velocity = Vector3Scale(Vector3Normalize(Vector3CrossProduct(positions[i], (Vector3){0.0,0.0,1.0})), planetVelocities[i]);
+        physicsObjects[i].velocity = Vector3Scale(Vector3Normalize(Vector3CrossProduct(Vector3Subtract(positions[i], positions[parents[i]]), (Vector3){0.0,0.0,1.0})), planetVelocities[i]);
 
         positions[i] = Vector3Add(positions[i], Vector3Scale(physicsObjects[i].velocity, timePassed));
     }

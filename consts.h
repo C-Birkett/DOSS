@@ -20,7 +20,7 @@ enum planets
     numPlanets,
 };
 
-const std::array<unsigned int, numPlanets> parents = {}; // should default init to 0
+const std::array<unsigned int, numPlanets> planetParents = {0}; // should default init to 0
 
 constexpr std::array<float, numPlanets> orbitRadii = { // AU
     0.0f,
