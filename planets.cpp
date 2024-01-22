@@ -26,7 +26,7 @@ void Planets::InitSolarSystem()
         
         radii.push_back(planetRadii[i]);
 
-        PhysicsObject obj = {(Vector3){0.0f, planetVelocities[i], 0.0f},
+        PhysicsObject obj = {(Vector3){0.0f, planetInitialVelocities[i], 0.0f},
                               GetPlanetAccel(i)};
 
         physicsObjects.push_back(obj);
@@ -75,8 +75,6 @@ void Planets::DrawPlanets()
 Vector3 Planets::GetPlanetAccel(std::size_t planet)
 {
     float accel = planetForces[planet] / (planetMasses[planet] * 1.0e24f);
-
-    //if(planet == earth) TraceLog(LOG_INFO, "force: %e\nmass: %e\naccel: %f\n\n", planetForces[planet], planetMasses[planet] * 1.0e24f, accel);
 
     Vector3 dir =   Vector3Normalize(
                     Vector3Subtract(positions[parents[planet]],

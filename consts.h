@@ -58,7 +58,7 @@ constexpr std::array<float, numPlanets> planetMasses = { // e24 kg
     102.0f,
 };
 
-constexpr std::array<float, numPlanets> planetVelocities = { // m s-1
+constexpr std::array<float, numPlanets> planetInitialVelocities = { // m s-1
     0.0e3f,
     47.4e3f,
     35.0e3f,
