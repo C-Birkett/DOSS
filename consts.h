@@ -2,9 +2,13 @@
 
 #include "raylib.h"
 #include <array>
+#include <cmath>
 
 // astronomic units scale, where 1.0f = 1km
 constexpr float AU = 1.5e11f;
+
+// gravitational constant G
+constexpr float gravConstant = 6.6743e-11; // N m2 kg-2
 
 enum planets
 {
@@ -58,20 +62,7 @@ constexpr std::array<float, numPlanets> planetMasses = { // e24 kg
     102.0f,
 };
 
-constexpr std::array<float, numPlanets> planetInitialVelocities = { // m s-1
-    0.0e3f,
-    47.4e3f,
-    35.0e3f,
-    29.8e3f,
-    24.1e3f,
-    13.1e3f,
-    9.7e3f,
-    6.8e3f,
-    5.4e3f,
-};
-
-constexpr float gravConstant = 6.6743e-11; // N m2 kg-2
-
+// gravitational force = Gm1m2/r^2
 constexpr float gravForce(unsigned int p1, unsigned int p2)
 {
     double massesMult = planetMasses[p1] * planetMasses[p2];
@@ -95,6 +86,27 @@ const std::array<float, numPlanets> planetForces = { // N
     gravForce(sun, saturn),
     gravForce(sun, uranus),
     gravForce(sun, neptune),
+};
+
+// orbit velocity
+// dodgy assumption that mass of parent >> mass of child
+constexpr float initialVelocity(unsigned int p)
+{
+    // possible overflow here!
+    float Gm = gravConstant * planetMasses[planetParents[p]] * 1.0e24f;
+    return sqrtf(Gm / orbitRadii[p]);
+}
+
+const std::array<float, numPlanets> planetInitialVelocities = { // m s-1
+    0.0f,
+    initialVelocity(mercury),
+    initialVelocity(venus),
+    initialVelocity(earth),
+    initialVelocity(mars),
+    initialVelocity(jupiter),
+    initialVelocity(saturn),
+    initialVelocity(uranus),
+    initialVelocity(neptune)
 };
 
 constexpr std::array<Color, numPlanets> planetColours = {
