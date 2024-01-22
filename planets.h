@@ -13,20 +13,23 @@ struct PhysicsObject
 class Planets
 {
 public:
-    Planets();
+    Planets(bool randomSystem = false, unsigned int numPlanets = 0);
     ~Planets() = default;
 
+    void Update(float timePassed);
+    void DrawPlanets();
+
+private:
     std::vector<unsigned int> parents;
     std::vector<Vector3> positions;
     std::vector<float> radii;
     std::vector<PhysicsObject> physicsObjects;
 
     void InitSolarSystem();
-    void InitRandomSystem(size_t numPlanets);
+    void InitRandomSystem(unsigned int numPlanets);
 
     void UpdatePhysicsObjects(float timePassed);
     void UpdatePositions(float timePassed);
-    void DrawPlanets();
 
     Vector3 GetPlanetAccel(std::size_t planet);
 };

@@ -46,8 +46,7 @@ void Update()
 {
     float time = GetFrameTime() * 1000000.0f; // run at 1000x speed
     
-    //solarsystem.UpdatePhysicsObjects(time);
-    solarsystem.UpdatePositions(time);
+    solarsystem.Update(time);
 }
 
 void HandleInputs()
@@ -67,6 +66,8 @@ void UpdateDrawFrame()
             solarsystem.DrawPlanets();
 
         EndMode3D();
+
+        DrawFPS(10, 10);
 
     EndDrawing();
 }

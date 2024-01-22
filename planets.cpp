@@ -5,15 +5,10 @@
 
 #include "consts.h"
 
-Planets::Planets()
+Planets::Planets(bool randomSystem /* = false */, unsigned int numPlanets /* = 0 */)
 {
-    InitSolarSystem();
-}
-
-Vector3 Planets::GetPlanetAccel(size_t planet)
-{
-    float accel = planetForces[planet] / planetMasses[planet];
-    return Vector3Scale(Vector3Normalize(Vector3Negate(positions[planet])), accel);
+    if(randomSystem) InitRandomSystem(numPlanets);
+    else InitSolarSystem();
 }
 
 void Planets::InitSolarSystem()
@@ -36,13 +31,17 @@ void Planets::InitSolarSystem()
 
         physicsObjects.push_back(obj);
     }
-
-    parents[1] = 3;
 }
 
-void Planets::InitRandomSystem(size_t numPlanets)
+void Planets::InitRandomSystem(unsigned int numPlanets)
 {
 
+}
+
+void Planets::Update(float timePassed)
+{
+    UpdatePhysicsObjects(timePassed);
+    UpdatePositions(timePassed);
 }
 
 void Planets::UpdatePhysicsObjects(float timePassed)
@@ -50,7 +49,10 @@ void Planets::UpdatePhysicsObjects(float timePassed)
     for(std::size_t i = 0; i < numPlanets; i++)
     {
         physicsObjects[i].acceleration = GetPlanetAccel(i);
-        physicsObjects[i].velocity = Vector3Add(physicsObjects[i].velocity, Vector3Scale(physicsObjects[i].acceleration, timePassed));
+
+        physicsObjects[i].velocity =Vector3Add(     physicsObjects[i].velocity,
+                                    Vector3Scale(   physicsObjects[i].acceleration,
+                                                    timePassed));
     }
 }
 
@@ -58,8 +60,6 @@ void Planets::UpdatePositions(float timePassed)
 {
     for(std::size_t i = 0; i < numPlanets; i++)
     {
-        physicsObjects[i].velocity = Vector3Scale(Vector3Normalize(Vector3CrossProduct(Vector3Subtract(positions[i], positions[parents[i]]), (Vector3){0.0,0.0,1.0})), planetVelocities[i]);
-
         positions[i] = Vector3Add(positions[i], Vector3Scale(physicsObjects[i].velocity, timePassed));
     }
 }
@@ -68,8 +68,20 @@ void Planets::DrawPlanets()
 {
     for(std::size_t i = 0; i < numPlanets; i++)
     {
-        //TraceLog(LOG_INFO, "planet: %d position: %f radii: %f", i, positions[i].x / AU, radii[i] / AU);
         DrawSphereWires(Vector3Scale(positions[i], 1.0f / AU), radii[i] * 1000.0f / AU, 7,8, planetColours[i]);
-        //DrawSphere(Vector3Scale(positions[i], 1.0f / AU), radii[i] * 1000.0f / AU, planetColours[i]);
     }
 }
+
+Vector3 Planets::GetPlanetAccel(std::size_t planet)
+{
+    float accel = planetForces[planet] / (planetMasses[planet] * 1.0e24f);
+
+    //if(planet == earth) TraceLog(LOG_INFO, "force: %e\nmass: %e\naccel: %f\n\n", planetForces[planet], planetMasses[planet] * 1.0e24f, accel);
+
+    Vector3 dir =   Vector3Normalize(
+                    Vector3Subtract(positions[parents[planet]],
+                                    positions[planet]));
+
+    return Vector3Scale(dir, accel);
+}
+
