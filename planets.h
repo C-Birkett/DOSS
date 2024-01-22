@@ -13,8 +13,10 @@ struct PhysicsObject
 class Planets
 {
 public:
-    Planets(bool randomSystem = false, unsigned int numPlanets = 0);
+    Planets();
     ~Planets() = default;
+
+    void Init(bool randomSystem = false, unsigned int numPlanets = 0);
 
     void Update(float timePassed);
     void DrawPlanets();
