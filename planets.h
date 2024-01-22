@@ -16,14 +16,17 @@ public:
     Planets();
     ~Planets() = default;
 
-    void Init(bool randomSystem = false, unsigned int numPlanets = 0);
+    void Init(unsigned int numPlanets = 0);
 
     void Update(float timePassed);
     void DrawPlanets();
 
 private:
+    unsigned int m_numPlanets;
     std::vector<unsigned int> parents;
     std::vector<Vector3> positions;
+    std::vector<float> masses;
+    std::vector<float> forces;
     std::vector<float> radii;
     std::vector<PhysicsObject> physicsObjects;
 
@@ -33,5 +36,8 @@ private:
     void UpdatePhysicsObjects(float timePassed);
     void UpdatePositions(float timePassed);
 
-    Vector3 GetPlanetAccel(std::size_t planet);
+    Vector3 GetRelativePosn(unsigned int planet);
+    Vector3 GetPlanetAccel(unsigned int planet);
+    float GetPlanetGravForce(unsigned int p1, unsigned int p2, float radius);
+    float GetPlanetVolume(unsigned int planet);
 };

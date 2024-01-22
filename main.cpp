@@ -1,6 +1,7 @@
 #include <raylib.h>
 #include <raymath.h>
 
+#include "consts.h"
 #include "planets.h"
 
 // consts
@@ -8,9 +9,6 @@ const char* WINDOW_TITLE = "DOSS";
 constexpr unsigned int SCREEN_WIDTH = 800;
 constexpr unsigned int SCREEN_HEIGHT = 600;
 constexpr unsigned int TARGET_FPS = 60;
-
-constexpr Vector3 ORIGIN = (Vector3){0.0f, 0.0f, 0.0f};
-constexpr Vector3 UP_VECTOR = (Vector3){0.0f, 0.0f, 1.0f};
 
 constexpr Vector3 CAM_INITIAL_POSITION = (Vector3){5.0f, 3.0f, 10.0f};
 constexpr float CAM_FOV = 45.0f;
@@ -37,7 +35,7 @@ int main(int argc, char** argv)
 
     SetTargetFPS(TARGET_FPS);
 
-    solarsystem.Init();
+    solarsystem.Init(5);
 
     // setup camera
     GCamera.position = CAM_INITIAL_POSITION;
