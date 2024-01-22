@@ -19,6 +19,8 @@ int main(int argc, char** argv)
     // initialise
     InitWindow(screenWidth, screenHeight, "DOSS");
 
+    DisableCursor();
+
     SetTargetFPS(60);
 
     // setup camera
@@ -45,12 +47,15 @@ int main(int argc, char** argv)
 void Update()
 {
     float time = GetFrameTime() * 1000000.0f; // run at 1000x speed
-    
+                                              //
     solarsystem.Update(time);
 }
 
 void HandleInputs()
 {
+    UpdateCamera(&camera, CAMERA_FREE);
+    
+    if(IsKeyPressed('Z')) camera.target = (Vector3){0.0f,0.0f,0.0f};
 }
 
 void UpdateDrawFrame()
