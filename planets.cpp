@@ -38,10 +38,6 @@ void Planets::InitSolarSystem()
                                     orbitRadii[i]
                                 );
 
-        TraceLog(LOG_INFO, "%d", GetRandomValue(0, 100));
-        TraceLog(LOG_INFO, "%f, %f", initialPosn.x, initialPosn.y);
-
-        //initialPosn = (Vector3){orbitRadii[i], 0.0f,  0.0f};
         positions.push_back(initialPosn);
         
         radii.push_back(planetRadii[i]);
@@ -54,8 +50,6 @@ void Planets::InitSolarSystem()
                                     planetInitialVelocities[i]
                                 );
 
-        
-        //initialVel = (Vector3){0.0f, planetInitialVelocities[i], 0.0f};
         PhysicsObject obj = {initialVel,
                              GetPlanetAccel(i)};
 
