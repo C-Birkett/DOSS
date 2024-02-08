@@ -4,6 +4,7 @@
 #include <raylib.h>
 #include <raymath.h>
 
+#include "Vec3.h"
 #include "consts.h"
 
 Planets::Planets()
@@ -28,22 +29,19 @@ void Planets::InitSolarSystem()
     masses.reserve(numPlanets);
     physicsObjects.reserve(numPlanets);
 
-    Vector3 initialPosn = { 0.0f, 0.0f, 0.0f };
-    Vector3 initialVel = { 0.0f, 0.0f, 0.0f };
+    Vec3 initialPosn = (Vector3){ 0.0f, 0.0f, 0.0f };
+    Vec3 initialVel = (Vector3){ 0.0f, 0.0f, 0.0f };
     PhysicsObject physObj;
     for(std::size_t i = 0; i < numPlanets; i++)
     {
         parents.push_back(planetParents[i]);
 
+        initialPosn = (Vector3){static_cast<float>(GetRandomValue(-100, 100)),
+                                static_cast<float>(GetRandomValue(-100, 100)),
+                                0.0f};
 
-        initialPosn =   Vector3Scale(
-                                    Vector3Normalize(
-                                        { static_cast<float>(GetRandomValue(-100, 100)),
-                                          static_cast<float>(GetRandomValue(-100, 100)),
-                                          0.0f}
-                                    ),
-                                    orbitRadii[i]
-                                );
+        initialPosn = initialPosn.normalize();
+        initialPosn = initialPosn * orbitRadii[i];
 
         positions.push_back(initialPosn);
         
@@ -51,16 +49,12 @@ void Planets::InitSolarSystem()
         forces.push_back(planetForces[i]);
         masses.push_back(planetMasses[i]);
 
-        Vector3 initialVel =    Vector3Scale(
-                                    Vector3Normalize(
-                                        Vector3CrossProduct(initialPosn,
-                                                            UP_VECTOR)
-                                        ),
-                                    planetInitialVelocities[i]
-                                );
+        initialVel = initialPosn.cross(UP_VECTOR);
+        initialVel = initialVel.normalize();
+        initialVel = initialVel * planetInitialVelocities[i];
 
         physObj = {initialVel,
-                             GetPlanetAccel(i)};
+                   GetPlanetAccel(i)};
 
         physicsObjects.push_back(physObj);
     }
@@ -186,20 +180,19 @@ void Planets::DrawPlanets()
 }
 
 // relative to it's parent
-Vector3 Planets::GetRelativePosn(unsigned int planet)
+Vec3 Planets::GetRelativePosn(unsigned int planet)
 {
-    return Vector3Subtract(positions[planet], positions[parents[planet]]);
+    return positions[planet] - positions[parents[planet]];
 }
 
-Vector3 Planets::GetPlanetAccel(unsigned int planet)
+Vec3 Planets::GetPlanetAccel(unsigned int planet)
 {
     float accel = forces[planet] / (masses[planet] * 1.0e24f);
 
-    Vector3 dir =   Vector3Normalize(
-                    Vector3Subtract(positions[parents[planet]],
-                                    positions[planet]));
+    Vec3 dir = positions[parents[planet]] - positions[planet];
+    dir = dir.normalize();
 
-    return Vector3Scale(dir, accel);
+    return dir * accel;
 }
 
 float Planets::GetPlanetGravForce(unsigned int p1, unsigned int p2, float radius)
