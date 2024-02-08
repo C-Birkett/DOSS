@@ -5,8 +5,8 @@
 #include <cmath>
 
 // vector consts
-constexpr Vector3 ORIGIN = (Vector3){0.0f, 0.0f, 0.0f};
-constexpr Vector3 UP_VECTOR = (Vector3){0.0f, 0.0f, 1.0f};
+constexpr Vector3 ORIGIN = {0.0f, 0.0f, 0.0f};
+constexpr Vector3 UP_VECTOR = {0.0f, 0.0f, 1.0f};
 
 // astronomic units scale, where 1.0f = 1km
 constexpr float AU = 1.5e11f;

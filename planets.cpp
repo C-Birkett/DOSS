@@ -36,9 +36,9 @@ void Planets::InitSolarSystem()
 
         initialPosn =   Vector3Scale(
                                     Vector3Normalize(
-                                    (Vector3){  static_cast<float>(GetRandomValue(-100, 100)),
-                                                static_cast<float>(GetRandomValue(-100, 100)),
-                                                0.0f}
+                                        { static_cast<float>(GetRandomValue(-100, 100)),
+                                          static_cast<float>(GetRandomValue(-100, 100)),
+                                          0.0f}
                                     ),
                                     orbitRadii[i]
                                 );
@@ -115,9 +115,9 @@ void Planets::InitRandomSystem(unsigned int numPlanets)
         
         initialPosn =   Vector3Scale(
                             Vector3Normalize(
-                                (Vector3){  static_cast<float>(GetRandomValue(-100, 100)),
-                                            static_cast<float>(GetRandomValue(-100, 100)),
-                                            0.0f}
+                                {static_cast<float>(GetRandomValue(-100, 100)),
+                                 static_cast<float>(GetRandomValue(-100, 100)),
+                                 0.0f}
                             ),
                             orbitRadius
                         );

@@ -10,7 +10,7 @@ constexpr unsigned int SCREEN_WIDTH = 800;
 constexpr unsigned int SCREEN_HEIGHT = 600;
 constexpr unsigned int TARGET_FPS = 60;
 
-constexpr Vector3 CAM_INITIAL_POSITION = (Vector3){5.0f, 3.0f, 10.0f};
+constexpr Vector3 CAM_INITIAL_POSITION = {5.0f, 3.0f, 10.0f};
 constexpr float CAM_FOV = 45.0f;
 
 // statics
