@@ -1,4 +1,7 @@
 cmake_minimum_required(VERSION 3.0.0)
+
+set(CMAKE_CXX_STANDARD 20)
+
 project(DOSS
         VERSION 0.1.0
         LANGUAGES CXX)
@@ -40,5 +43,3 @@ add_executable(${APPNAME} ./main.cpp)
 target_link_libraries(${APPNAME} 
                         raylib
                         doss_lib)
-
-#target_compile_features(${APPNAME} PRIVATE cxx_std_17)

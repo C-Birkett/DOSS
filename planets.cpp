@@ -17,6 +17,8 @@ void Planets::Init(unsigned int numPlanets /* = 0 */)
 
 void Planets::InitSolarSystem()
 {
+    using namespace SolarSystem;
+
     m_numPlanets = numPlanets;
 
     parents.reserve(numPlanets);
@@ -26,8 +28,8 @@ void Planets::InitSolarSystem()
     masses.reserve(numPlanets);
     physicsObjects.reserve(numPlanets);
 
-    Vector3 initialPosn;
-    Vector3 initialVel;
+    Vector3 initialPosn = { 0.0f, 0.0f, 0.0f };
+    Vector3 initialVel = { 0.0f, 0.0f, 0.0f };
     PhysicsObject physObj;
     for(std::size_t i = 0; i < numPlanets; i++)
     {
@@ -87,7 +89,7 @@ void Planets::InitRandomSystem(unsigned int numPlanets)
     // add star
     parents.push_back(0);
     positions.push_back(ORIGIN);
-    radii.push_back(planetRadii[0]); // planet radius
+    radii.push_back(SolarSystem::planetRadii[0]); // planet radius
     physObj = {ORIGIN, ORIGIN};
     physicsObjects.push_back(physObj);
 
@@ -179,7 +181,7 @@ void Planets::DrawPlanets()
 {
     for(std::size_t i = 0; i < m_numPlanets; i++)
     {
-        DrawSphereWires(Vector3Scale(positions[i], 1.0f / AU), radii[i] * 1000.0f / AU, 7,8, planetColours[i]);
+        DrawSphereWires(Vector3Scale(positions[i], 1.0f / AU), radii[i] * 1000.0f / AU, 7,8, SolarSystem::planetColours[i]);
     }
 }
 
@@ -204,7 +206,7 @@ float Planets::GetPlanetGravForce(unsigned int p1, unsigned int p2, float radius
 {
     double massesMult = masses[p1] * masses[p2];
     double orbitSquared = radius * radius;
-    double force = (float)(gravConstant * massesMult / orbitSquared);
+    double force = (float)(GRAV_CONSTANT * massesMult / orbitSquared);
 
     // adjust for mass
     force *= 1.0e24f;

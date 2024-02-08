@@ -35,7 +35,7 @@ int main(int argc, char** argv)
 
     SetTargetFPS(TARGET_FPS);
 
-    solarsystem.Init(5);
+    solarsystem.Init();
 
     // setup camera
     GCamera.position = CAM_INITIAL_POSITION;
