@@ -18,7 +18,7 @@ void Planets::Init(unsigned int numPlanets /* = 0 */)
 
 void Planets::InitSolarSystem()
 {
-    using namespace SolarSystem;
+    m_numPlanets = SolarSystem::numPlanets;
 
     m_numPlanets = numPlanets;
 
@@ -32,9 +32,11 @@ void Planets::InitSolarSystem()
     Vec3 initialPosn = (Vector3){ 0.0f, 0.0f, 0.0f };
     Vec3 initialVel = (Vector3){ 0.0f, 0.0f, 0.0f };
     PhysicsObject physObj;
-    for(std::size_t i = 0; i < numPlanets; i++)
+    for(std::size_t i = 0; i < m_numPlanets; i++)
     {
-        parents.push_back(planetParents[i]);
+        parents.push_back(SolarSystem::planetParents[i]);
+
+        orbitRadii.push_back(SolarSystem::orbitRadii[i]);
 
         initialPosn = (Vector3){static_cast<float>(GetRandomValue(-100, 100)),
                                 static_cast<float>(GetRandomValue(-100, 100)),
@@ -45,13 +47,12 @@ void Planets::InitSolarSystem()
 
         positions.push_back(initialPosn);
         
-        radii.push_back(planetRadii[i]);
-        forces.push_back(planetForces[i]);
-        masses.push_back(planetMasses[i]);
+        planetRadii.push_back(SolarSystem::planetRadii[i]);
+        masses.push_back(SolarSystem::planetMasses[i]);
 
         initialVel = initialPosn.cross(UP_VECTOR);
         initialVel = initialVel.normalize();
-        initialVel = initialVel * planetInitialVelocities[i];
+        initialVel = initialVel * SolarSystem::planetInitialVelocities[i];
 
         physObj = {initialVel,
                    GetPlanetAccel(i)};
@@ -83,8 +84,9 @@ void Planets::InitRandomSystem(unsigned int numPlanets)
     // add star
     parents.push_back(0);
     positions.push_back(ORIGIN);
-    radii.push_back(SolarSystem::planetRadii[0]); // planet radius
+    planetRadii.push_back(SolarSystem::planetRadii[0]); // planet radius
     physObj = {ORIGIN, ORIGIN};
+    masses.push_back(SolarSystem::planetMasses[0]);
     physicsObjects.push_back(physObj);
 
     for(unsigned int i = 1; i < numPlanets; i++)
