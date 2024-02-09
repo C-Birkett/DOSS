@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.0.0)
 
 set(CMAKE_CXX_STANDARD 20)
 
+set(CMAKE_BUILD_TYPE Release)
+
 project(DOSS
         VERSION 0.1.0
         LANGUAGES CXX)
@@ -46,6 +48,6 @@ target_link_libraries(${APPNAME}
                         raylib
                         doss_lib)
 
-IF(WIN32)
-set_target_properties(${APPNAME} PROPERTIES WIN32_EXECUTABLE TRUE)
-ENDIF()
+if(WIN32)
+    set_target_properties(${APPNAME} PROPERTIES WIN32_EXECUTABLE TRUE)
+endif()
