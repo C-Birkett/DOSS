@@ -37,9 +37,15 @@ target_link_libraries(doss_lib raylib)
 
 # important names
 set(APPNAME ${PROJECT_NAME})
+
+# declare executable
 add_executable(${APPNAME} ./main.cpp)
 
 # raylib
 target_link_libraries(${APPNAME} 
                         raylib
                         doss_lib)
+
+IF(WIN32)
+set_target_properties(${APPNAME} PROPERTIES WIN32_EXECUTABLE TRUE)
+ENDIF()
