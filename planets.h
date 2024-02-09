@@ -26,8 +26,8 @@ private:
     std::vector<unsigned int> parents;
     std::vector<Vec3> positions;
     std::vector<float> masses;
-    std::vector<float> forces;
-    std::vector<float> radii;
+    std::vector<float> planetRadii;
+    std::vector<float> orbitRadii;
     std::vector<PhysicsObject> physicsObjects;
 
     void InitSolarSystem();
