@@ -33,4 +33,7 @@ struct Vec3 : public Vector3
 
 	Vec3 normalize()
 	{ return Vector3Normalize(*this); }
+
+	float length()
+	{ return Vector3Length(*this); }
 };
