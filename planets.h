@@ -25,9 +25,9 @@ private:
     unsigned int m_numPlanets;
     std::vector<unsigned int> parents;
     std::vector<Vec3> positions;
-    std::vector<float> masses;
-    std::vector<float> planetRadii;
-    std::vector<float> orbitRadii;
+    std::vector<double> masses;
+    std::vector<double> planetRadii;
+    std::vector<double> orbitRadii;
     std::vector<PhysicsObject> physicsObjects;
 
     void InitSolarSystem();
@@ -38,6 +38,6 @@ private:
 
     Vec3 GetRelativePosn(unsigned int planet);
     Vec3 GetPlanetAccel(unsigned int planet);
-    float GetPlanetGravForce(unsigned int p1, unsigned int p2, float radius);
-    float GetPlanetVolume(unsigned int planet);
+    double GetPlanetGravForce(unsigned int p1, unsigned int p2, double radius);
+    double GetPlanetVolume(unsigned int planet);
 };

@@ -5,13 +5,15 @@
 #include "planets.h"
 
 // consts
-const char* WINDOW_TITLE = "DOSS";
+constexpr char WINDOW_TITLE[] = "DOSS";
 constexpr unsigned int SCREEN_WIDTH = 800;
 constexpr unsigned int SCREEN_HEIGHT = 600;
 constexpr unsigned int TARGET_FPS = 60;
 
 constexpr Vector3 CAM_INITIAL_POSITION = {5.0f, 3.0f, 10.0f};
 constexpr float CAM_FOV = 45.0f;
+
+constexpr float RUN_SPEED = 1e6f;
 
 // statics
 static Camera3D GCamera = {0};
@@ -35,7 +37,7 @@ int main(int argc, char** argv)
 
     SetTargetFPS(TARGET_FPS);
 
-    solarsystem.Init(1000);
+    solarsystem.Init(500);
 
     // setup camera
     GCamera.position = CAM_INITIAL_POSITION;
@@ -59,7 +61,7 @@ int main(int argc, char** argv)
 
 void Update()
 {
-    float time = GetFrameTime() * 1000000.0f; // run at 1000x speed
+    float time = GetFrameTime() * RUN_SPEED;
     
     solarsystem.Update(time);
 }

@@ -1,11 +1,12 @@
 #include "planets.h"
 
-#include <algorithm>
 #include <raylib.h>
 #include <raymath.h>
 
 #include "Vec3.h"
 #include "consts.h"
+
+constexpr float PLANET_DRAW_SCALE = 1000.0f / AU;
 
 Planets::Planets()
 {}
@@ -72,9 +73,9 @@ void Planets::InitRandomSystem(unsigned int numPlanets)
     physicsObjects.reserve(numPlanets);
 
     // vars
-    float planetRadius = 0.0f;
-    float orbitRadius = 0.0f;
-    float force = 0.0f;
+    double planetRadius = 0.0;
+    double orbitRadius = 0.0;
+    double force = 0.0;
     Vec3 initialPosn = (Vector3){ 0.0f, 0.0f, 0.0f };
     Vec3 relPosn = (Vector3){ 0.0f, 0.0f, 0.0f };
     Vec3 initialVel = (Vector3){ 0.0f, 0.0f, 0.0f };
@@ -101,14 +102,15 @@ void Planets::InitRandomSystem(unsigned int numPlanets)
         // random orbit radius, max 1/20 parents orbit of its parent, else 10 AU
         if(parent)
         {
-            float parentOrbit = orbitRadii[parent];
-            orbitRadius = (float)GetRandomValue(25, (int)((parentOrbit * 100.0f) / (20.0f * AU))) / 100.0f;
+            double maxOrbit = orbitRadii[parent] / (20.0 * AU);
+            orbitRadius = static_cast<double>(GetRandomValue(20, static_cast<int>(maxOrbit * 100.0)));
         }
         else
         {
-            orbitRadius = (float)GetRandomValue(50, 1000) / 100.0f;
+            orbitRadius = static_cast<double>(GetRandomValue(50, 1000));
         }
 
+        orbitRadius /= 100.0;
         orbitRadius *= AU;
         orbitRadii.push_back(orbitRadius);
         
@@ -123,23 +125,16 @@ void Planets::InitRandomSystem(unsigned int numPlanets)
         positions.push_back(initialPosn);
 
         // random planet radius, max half size of parent
-        planetRadius = (float)GetRandomValue(1e6, (int)planetRadii[parent] / 2);
+        planetRadius = static_cast<double>(GetRandomValue(1e6, (int)planetRadii[parent] / 2));
         planetRadii.push_back(planetRadius);
 
-        if(parent)
-        {
-            // need parent mass >> planet mass
-            masses.push_back(masses[parent] / 1.0e5f);
-        }
-        else
-        {
-            // assume density of water (1m^3 = 1e3 kg) for now, get mass
-            masses.push_back(GetPlanetVolume(i) * 1.0e3f / MASS_ADJUST);
-        }
+        // assume density of water (1m^3 = 1e3 kg) for now, get mass
+        masses.push_back(GetPlanetVolume(i) * 1e3 / MASS_ADJUST);
 
         // initial velocity
         initialVel = GetRelativePosn(i).cross(UP_VECTOR);
         initialVel = initialVel.normalize();
+        if(GetRandomValue(0, 1)) initialVel = initialVel * -1.0f; // randomise orbit direction
         initialVel = initialVel * InitialVelocity(i, masses, orbitRadii, parents);
 
         // add parents vel which adds its parent etc...
@@ -180,7 +175,7 @@ void Planets::DrawPlanets()
 {
     for(std::size_t i = 0; i < m_numPlanets; i++)
     {
-        DrawSphereWires(positions[i] / AU, planetRadii[i] * 1000.0f / AU, 7,8, SolarSystem::planetColours[i]);
+        DrawSphereWires(positions[i] / AU, planetRadii[i] * PLANET_DRAW_SCALE, 7,8, SolarSystem::planetColours[i]);
     }
 }
 
@@ -197,11 +192,11 @@ Vec3 Planets::GetPlanetAccel(unsigned int planet)
 
     unsigned int parent = parents[planet];
     double force = GravForce(parent, planet, masses, orbitRadii);
-    double accel = force / static_cast<double>(masses[planet] * MASS_ADJUST);
-
+    double accel = force / (masses[planet] * MASS_ADJUST);
+    
     Vec3 dir = positions[parent] - positions[planet];
     dir = dir.normalize();
-    accelVec = dir * (float)accel;
+    accelVec = dir * accel;
  
     // add parents accel which adds its parent etc...
     if(parent) accelVec = accelVec + physicsObjects[parent].acceleration;
@@ -209,8 +204,8 @@ Vec3 Planets::GetPlanetAccel(unsigned int planet)
     return accelVec;
 }
 
-static const float fourThirdsPi = 4.0f/3.0f * PI;
-float Planets::GetPlanetVolume(unsigned int planet)
+constexpr double fourThirdsPi = 4.0/3.0 * PI;
+double Planets::GetPlanetVolume(unsigned int planet)
 {
     return fourThirdsPi * planetRadii[planet] * planetRadii[planet] * planetRadii[planet];
 }
